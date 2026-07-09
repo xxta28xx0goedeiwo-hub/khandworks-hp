@@ -21,6 +21,50 @@ window.addEventListener('scroll', () => {
 });
 backToTop?.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
+// Contact form (Formspree AJAX submit)
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+  const statusEl = document.getElementById('form-status');
+  const submitBtn = contactForm.querySelector('.form-submit');
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!contactForm.checkValidity()) {
+      contactForm.reportValidity();
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = '送信中...';
+    statusEl.className = 'form-status';
+    statusEl.textContent = '';
+
+    try {
+      const res = await fetch(contactForm.action, {
+        method: 'POST',
+        body: new FormData(contactForm),
+        headers: { Accept: 'application/json' },
+      });
+
+      if (res.ok) {
+        statusEl.textContent = '送信しました。担当より1〜2営業日以内にご連絡します。';
+        statusEl.className = 'form-status show success';
+        contactForm.reset();
+      } else {
+        statusEl.textContent = '送信に失敗しました。お手数ですがお電話にてご連絡ください。';
+        statusEl.className = 'form-status show error';
+      }
+    } catch (err) {
+      statusEl.textContent = '送信に失敗しました。お手数ですがお電話にてご連絡ください。';
+      statusEl.className = 'form-status show error';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '送信する →';
+    }
+  });
+}
+
 // Works filter
 const filterBtns = document.querySelectorAll('.filter-btn');
 const workCards  = document.querySelectorAll('.work-card[data-category]');
