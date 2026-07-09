@@ -21,13 +21,20 @@ window.addEventListener('scroll', () => {
 });
 backToTop?.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-// Contact form (Formspree AJAX submit)
+// Contact form (mailto handoff — no external service required)
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
   const statusEl = document.getElementById('form-status');
   const submitBtn = contactForm.querySelector('.form-submit');
+  const CONTACT_EMAIL = 'k.handworks.info@gmail.com';
+  const SERVICE_LABELS = {
+    repair: '住宅リペア・建材補修',
+    infra: 'コンクリート・インフラ補修',
+    asbestos: '石綿（アスベスト）事前調査',
+    other: 'その他・複合的な相談',
+  };
 
-  contactForm.addEventListener('submit', async (e) => {
+  contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
     if (!contactForm.checkValidity()) {
@@ -35,33 +42,29 @@ if (contactForm) {
       return;
     }
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = '送信中...';
-    statusEl.className = 'form-status';
-    statusEl.textContent = '';
+    // Honeypot: silently ignore bot submissions
+    if (contactForm.elements['_gotcha']?.value) return;
 
-    try {
-      const res = await fetch(contactForm.action, {
-        method: 'POST',
-        body: new FormData(contactForm),
-        headers: { Accept: 'application/json' },
-      });
+    const data = new FormData(contactForm);
+    const serviceValue = data.get('service');
+    const lines = [
+      `お名前: ${data.get('name') || ''}`,
+      `会社名・屋号: ${data.get('company') || '(なし)'}`,
+      `電話番号: ${data.get('tel') || ''}`,
+      `メールアドレス: ${data.get('email') || '(なし)'}`,
+      `ご相談内容の種別: ${SERVICE_LABELS[serviceValue] || '(未選択)'}`,
+      '',
+      'お問い合わせ内容:',
+      data.get('message') || '',
+    ];
 
-      if (res.ok) {
-        statusEl.textContent = '送信しました。担当より1〜2営業日以内にご連絡します。';
-        statusEl.className = 'form-status show success';
-        contactForm.reset();
-      } else {
-        statusEl.textContent = '送信に失敗しました。お手数ですがお電話にてご連絡ください。';
-        statusEl.className = 'form-status show error';
-      }
-    } catch (err) {
-      statusEl.textContent = '送信に失敗しました。お手数ですがお電話にてご連絡ください。';
-      statusEl.className = 'form-status show error';
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = '送信する →';
-    }
+    const subject = `【HPお問い合わせ】${data.get('name') || ''}様より`;
+    const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
+
+    statusEl.textContent = 'メールソフトを起動しています。開いたメールの内容をご確認のうえ、送信してください。';
+    statusEl.className = 'form-status show success';
+
+    window.location.href = mailto;
   });
 }
 

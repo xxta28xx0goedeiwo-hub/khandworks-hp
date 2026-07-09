@@ -197,8 +197,7 @@
             <h2>お問い合わせフォーム</h2>
           </div>
 
-          <!-- TODO: https://formspree.io/f/YOUR_FORM_ID をKT様のFormspreeフォームIDに差し替えてください -->
-          <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <form id="contact-form">
             <div class="form-group">
               <label class="form-label" for="name">お名前<span class="req">必須</span></label>
               <input class="form-input" type="text" id="name" name="name" placeholder="山田 太郎" required>
@@ -233,8 +232,8 @@
               <label>入力しないでください<input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label>
             </div>
             <p style="font-size:11px;color:var(--gray);margin-bottom:16px;line-height:1.8;">
-              送信いただいた内容は、お問い合わせへの返答目的のみに使用します。<br>
-              通常 1〜2 営業日以内にご連絡します。急ぎの場合はお電話ください。
+              「送信する」を押すと、入力内容を差し込んだメールがお使いのメールソフトで開きます。<br>
+              内容をご確認のうえ、そのまま送信してください。通常 1〜2 営業日以内にご返信します。
             </p>
             <button type="submit" class="form-submit">送信する →</button>
             <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
