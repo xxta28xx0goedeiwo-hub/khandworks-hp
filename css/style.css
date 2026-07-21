@@ -314,6 +314,28 @@ ul { list-style: none; }
 .area-label { font-size: 10px; color: var(--gold); font-weight: 700; letter-spacing: 0.1em; white-space: nowrap; }
 .area-text { font-size: 14px; color: rgba(255,255,255,0.8); }
 
+.trust-item-full { grid-column: 1 / -1; }
+
+/* ── INSURANCE STRIP ── */
+.insurance-strip {
+  display: flex; align-items: flex-start; gap: 16px;
+  max-width: 720px; margin: 0 auto;
+  background: rgba(184,150,12,0.08);
+  border: 1px solid rgba(184,150,12,0.25);
+  border-radius: 2px;
+  padding: 24px 28px;
+  text-align: left;
+}
+.insurance-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  background: rgba(184,150,12,0.1);
+  border: 1px solid rgba(184,150,12,0.35);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.insurance-icon svg { width: 18px; height: 18px; color: var(--gold); }
+.insurance-text { font-size: 13px; color: var(--gray); line-height: 1.9; }
+
 /* ── PAGE HERO ── */
 .page-hero {
   background: var(--navy);
